@@ -44,15 +44,15 @@ function handleCardClick(event) {
 function checkMatch() {
     const [card1, card2] = selectedCards;
     if (card1.dataset.color === card2.dataset.color) {
-        card1.classList.color.add('matched');
-        card2.classList.color.add('matched');
+        card1.classList.add('matched');
+        card2.classList.add('matched');
         score += 2;
         scoreElement.textContent = `Score: ${score}`;
     } else {
         card1.textContent = '?';
         card2.textContent = '?';
-        card1.style.backgroundColor = '#add';
-        card2.style.backgroundColor = '#add';
+        card1.style.backgroundColor = '#ddd';
+        card2.style.backgroundColor = '#ddd';
     }
     selectedCards = [];
 }
@@ -60,5 +60,29 @@ function checkMatch() {
 
 function startGame() {
     let timeLeft = 30;
-    startBtn.dis
+    startBtn.disabled = true;
+    score = 0;
+    scoreElement.textContent = `Score: ${score}`;
+    startGameTimer(timeLeft);
+    cards = shuffle(colors.concat(colors));
+    selectedCards = [];
+    gameContainer.innerHTML = "";
+    generateCards();
+    gameContainer.addEventListener('click', handleCardClick);
 }
+
+function startGameTimer(timeLeft) {
+    timerElement.textContent = `Time left: ${timeLeft}`;
+    gameInterval = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = `Time left ${timeLeft}`;
+
+        if (timeLeft === 0) {
+            clearInterval(gameInterval);
+            let timeLeft = 30;
+            alert('Game Over');
+            startBtn.disabled = false;
+        }
+    }, 1000);
+}
+startBtn.addEventListener('click', startGame);
